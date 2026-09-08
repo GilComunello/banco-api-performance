@@ -1,5 +1,7 @@
 import http from 'k6/http'
 import { sleep, check } from 'k6'
+const postLogin = JSON.parse(open('../fixtures/postLogin.json'));
+
 
 export const options = {
     stages: [
@@ -16,10 +18,10 @@ export const options = {
 export default function () {
     //test login
     const url = 'http://localhost:3000/login';
-    const payload = JSON.stringify({
-        username: 'julio.lima',
-        senha: '123456',
-    });
+
+    postLogin.username = 'junior.lima';
+    console.log(postLogin);
+    const payload = JSON.stringify(postLogin);
 
     const params = {
         headers: {
@@ -30,7 +32,7 @@ export default function () {
     const res = http.post(url, payload, params);
     check(res, {
         'Validar que o status é 200': (r) => r.status === 200,
-        'Validar que o token é uma string': (r) => typeof(r.json().token) == 'string',
+        'Validar que o token é uma string': (r) => typeof (r.json().token) == 'string',
     });
     sleep(1);
 }
